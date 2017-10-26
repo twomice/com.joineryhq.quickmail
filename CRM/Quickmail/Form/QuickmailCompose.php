@@ -9,20 +9,40 @@ use CRM_Quickmail_ExtensionUtil as E;
  */
 class CRM_Quickmail_Form_QuickmailCompose extends CRM_Core_Form {
   public function buildQuickForm() {
-
+    $recipientGroupsOptions = array_flip(CRM_Quickmail_Settings::getGroupOptions(CRM_Quickmail_Settings::FILTER_ALLOWED));
+    if (empty($recipientGroupsOptions)) {
+      // No groups are allowed, so can't send mail. Admin needs to configure
+      // before anyone can use QuickMail.
+      CRM_Core_Error::statusBounce(E::ts('No recipient groups are configured. Please contact your site administrator before using this feature.'), NULL, 'QuickMail');
+    }
     // add form elements
     $this->add(
       'text', // field type
       'from_name', // field name
-      'From Name', // field label
+      E::ts('From Name'), // field label
+      NULL, // attributes
       TRUE // is required
     );
     $this->add(
       'text', // field type
       'from_address', // field name
-      'From Address', // field label
+      E::ts('From Address'), // field label
+      NULL, // attributes
       TRUE // is required
     );
+    $this->addRule('from_address', E::ts('Email is not valid.'), 'email');
+
+    $this->addCheckBox(
+      'recipient_group_ids', // field name
+      E::ts('Recipient Groups'), // field label
+      $recipientGroupsOptions,
+      NULL,
+      NULL,
+      TRUE
+    );
+
+    $this->add('wysiwyg', 'email_body', ts('Message Body'));
+
     $this->addButtons(array(
       array(
         'type' => 'submit',
@@ -38,25 +58,7 @@ class CRM_Quickmail_Form_QuickmailCompose extends CRM_Core_Form {
 
   public function postProcess() {
     $values = $this->exportValues();
-    $options = $this->getColorOptions();
-    CRM_Core_Session::setStatus(E::ts('You picked color "%1"', array(
-      1 => $options[$values['favorite_color']],
-    )));
     parent::postProcess();
-  }
-
-  public function getColorOptions() {
-    $options = array(
-      '' => E::ts('- select -'),
-      '#f00' => E::ts('Red'),
-      '#0f0' => E::ts('Green'),
-      '#00f' => E::ts('Blue'),
-      '#f0f' => E::ts('Purple'),
-    );
-    foreach (array('1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e') as $f) {
-      $options["#{$f}{$f}{$f}"] = E::ts('Grey (%1)', array(1 => $f));
-    }
-    return $options;
   }
 
   /**
@@ -78,6 +80,23 @@ class CRM_Quickmail_Form_QuickmailCompose extends CRM_Core_Form {
       }
     }
     return $elementNames;
+  }
+
+  public function setDefaultValues() {
+    $ret = array();
+
+    $result = civicrm_api3('Contact', 'getSingle', array(
+      'id' => CRM_Core_Session::getLoggedInContactID(),
+      'return' => array(
+        'display_name',
+        'email',
+      ),
+    ));
+
+    $ret['from_name'] = $result['display_name'];
+    $ret['from_address'] = $result['email'];
+
+    return $ret;
   }
 
 }

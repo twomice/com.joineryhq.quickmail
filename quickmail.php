@@ -6,13 +6,13 @@ use CRM_Quickmail_ExtensionUtil as E;
 function quickmail_civicrm_permission(&$permissions) {
   $prefix = ts('CiviCRM QuickMail') . ': '; // name of extension or module
   $permissions['access quickmail'] = array(
-    $prefix . ts('access QuickMail'),                     // label
-    ts('Use CiviCRM QuickMail to send email'),  // description
+    $prefix . ts('access QuickMail'), // label
+    ts('Use CiviCRM QuickMail to send email'), // description
   );
   $permissions['administer quickmail'] = array(
-    $prefix . ts('Administer QuickMail'),                    // if no description, just give an array with the label
+    $prefix . ts('Administer QuickMail'), // if no description, just give an array with the label
     '',
-  );  
+  );
 }
 
 /**
@@ -155,10 +155,34 @@ function quickmail_civicrm_navigationMenu(&$menu) {
   _quickmail_civix_insert_navigation_menu($menu, 'Mailings', array(
     'label' => E::ts('QuickMail'),
     'name' => 'quickmail',
-    'url' => 'civicrm/quickmail',
+    'url' => 'civicrm/quickmail/compose?reset=1',
     'permission' => 'access quickmail',
     'operator' => 'AND',
     'separator' => 1,
   ));
+  _quickmail_civix_insert_navigation_menu($menu, 'Administer/CiviMail', array(
+    'label' => E::ts('QuickMail Settings'),
+    'name' => 'quickmail',
+    'url' => 'civicrm/admin/quickmail/settings?reset=1',
+    'permission' => 'administer CiviCRM',
+    'operator' => 'AND',
+  ));
   _quickmail_civix_navigationMenu($menu);
-} 
+}
+
+function quickmail_civicrm_coreResourceList(&$list, $region) {
+  // Make wysiwyg JavaScript available on Joomla front end.
+  $config = CRM_Core_Config::singleton();
+  if ($config->userFrameworkFrontend) {
+    foreach ($list as &$item) {
+      if (
+        is_array($item)
+        && array_key_exists('config', $item)
+        && array_key_exists('wysisygScriptLocation', $item['config'])
+        && strpos($item['config']['wysisygScriptLocation'], '/components/') === 0
+      ) {
+        $item['config']['wysisygScriptLocation'] = '/administrator' . $item['config']['wysisygScriptLocation'];
+      }
+    }
+  }
+}
