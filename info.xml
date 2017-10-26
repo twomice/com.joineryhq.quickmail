@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<extension key="com.joineryhq.quickmail" type="module">
+  <file>quickmail</file>
+  <name>QuickMail</name>
+  <description>Create and send immediately-scheduled emails to an admin-configured list of contact groups</description>
+  <license>GPL-3.0</license>
+  <maintainer>
+    <author>Allen Shaw</author>
+    <email>allen@JoineryHQ.com</email>
+  </maintainer>
+  <urls>
+    <url desc="Main Extension Page">http://FIXME</url>
+    <url desc="Documentation">http://FIXME</url>
+    <url desc="Support">http://FIXME</url>
+    <url desc="Licensing">http://www.gnu.org/licenses/gpl-3.0.html</url>
+  </urls>
+  <releaseDate>2017-10-24</releaseDate>
+  <version>0.1</version>
+  <develStage>alpha</develStage>
+  <compatibility>
+    <ver>4.7</ver>
+  </compatibility>
+  <comments>Developed by Joinery for Youth Education in the Arts</comments>
+  <civix>
+    <namespace>CRM/Quickmail</namespace>
+  </civix>
+</extension>

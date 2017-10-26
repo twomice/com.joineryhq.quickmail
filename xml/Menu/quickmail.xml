@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<menu>
+  <item>
+    <path>civicrm/quickmail/compose</path>
+    <page_callback>CRM_Quickmail_Form_QuickmailCompose</page_callback>
+    <title>QuickMail: Compose New Mail</title>
+    <access_arguments>access quickmail</access_arguments>
+  </item>
+  <item>
+    <path>civicrm/admin/quickmail/settings</path>
+    <page_callback>CRM_Quickmail_Form_Settings</page_callback>
+    <title>QuickMail: Settings</title>
+    <access_arguments>administer CiviCRM</access_arguments>
+  </item>
+</menu>
