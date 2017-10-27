@@ -15,7 +15,7 @@ class CRM_Quickmail_Form_Settings extends CRM_Core_Form {
   private $_submittedValues = array();
   private $_settings = array();
 
-  function __construct(
+  public function __construct(
     $state = NULL,
     $action = CRM_Core_Action::NONE,
     $method = 'post',
@@ -31,11 +31,12 @@ class CRM_Quickmail_Form_Settings extends CRM_Core_Form {
       $name = NULL
     );
   }
-  function buildQuickForm() {
+
+  public function buildQuickForm() {
     $settings = $this->_settings;
     foreach ($settings as $name => $setting) {
       if (isset($setting['quick_form_type'])) {
-        switch($setting['html_type']) {
+        switch ($setting['html_type']) {
           case 'Select':
             $this->add(
               $setting['html_type'], // field type
@@ -43,9 +44,10 @@ class CRM_Quickmail_Form_Settings extends CRM_Core_Form {
               $setting['title'], // field label
               $this->getSettingOptions($setting),
               NULL,
-              $setting['html_attributes']
+              CRM_Utils_Array::value('html_attributes', $setting, array())
             );
             break;
+
           case 'CheckBox':
             $options = array_flip($this->getSettingOptions($setting));
             $this->addCheckBox(
@@ -54,6 +56,7 @@ class CRM_Quickmail_Form_Settings extends CRM_Core_Form {
               $options
             );
             break;
+
           case 'Radio':
             $this->addRadio(
               $setting['name'], // field name
@@ -61,6 +64,7 @@ class CRM_Quickmail_Form_Settings extends CRM_Core_Form {
               $this->getSettingOptions($setting)
             );
             break;
+
           default:
             $add = 'add' . $setting['quick_form_type'];
             if ($add == 'addElement') {
@@ -75,7 +79,7 @@ class CRM_Quickmail_Form_Settings extends CRM_Core_Form {
       $descriptions[$setting['name']] = ts($setting['description']);
 
       if (!empty($setting['X_form_rules_args'])) {
-        $rules_args = (array)$setting['X_form_rules_args'];
+        $rules_args = (array) $setting['X_form_rules_args'];
         foreach ($rules_args as $rule_args) {
           array_unshift($rule_args, $setting['name']);
           call_user_func_array(array($this, 'addRule'), $rule_args);
@@ -85,11 +89,11 @@ class CRM_Quickmail_Form_Settings extends CRM_Core_Form {
     $this->assign("descriptions", $descriptions);
 
     $this->addButtons(array(
-      array (
+      array(
         'type' => 'submit',
         'name' => ts('Submit'),
         'isDefault' => TRUE,
-      )
+      ),
     ));
 
     $style_path = CRM_Core_Resources::singleton()->getPath(self::$extensionName, 'css/extension.css');
@@ -102,7 +106,7 @@ class CRM_Quickmail_Form_Settings extends CRM_Core_Form {
     parent::buildQuickForm();
   }
 
-  function postProcess() {
+  public function postProcess() {
     $this->_submittedValues = $this->exportValues();
     $this->saveSettings();
     CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/admin/quickmail/settings', 'reset=1'));
@@ -114,7 +118,7 @@ class CRM_Quickmail_Form_Settings extends CRM_Core_Form {
    *
    * @return array (string)
    */
-  function getRenderableElementNames() {
+  private function getRenderableElementNames() {
     // The _elements list includes some items which should not be
     // auto-rendered in the loop -- such as "qfKey" and "buttons". These
     // items don't have labels. We'll identify renderable by filtering on
@@ -131,21 +135,17 @@ class CRM_Quickmail_Form_Settings extends CRM_Core_Form {
 
   /**
    * Define the list of settings we are going to allow to be set on this form.
-   *
-   * @return array
    */
-  function setSettings() {
+  private function setSettings() {
     if (empty($this->_settings)) {
       $this->_settings = CRM_Quickmail_Settings::getSettingsMetadata();
     }
   }
 
   /**
-   * Get the settings we are going to allow to be set on this form.
-   *
-   * @return array
+   * Save the settings as submitted.
    */
-  function saveSettings() {
+  private function saveSettings() {
     $settings = $this->_settings;
     $settingValues = array_intersect_key($this->_submittedValues, $settings);
     civicrm_api3('setting', 'create', $settingValues);
@@ -162,51 +162,9 @@ class CRM_Quickmail_Form_Settings extends CRM_Core_Form {
    *
    * @see CRM_Core_Form::setDefaultValues()
    */
-  function setDefaultValues() {
+  public function setDefaultValues() {
     $ret = CRM_Quickmail_Settings::getSettingValues(array_keys($this->_settings), TRUE);
     return $ret;
-  }
-
-  public static function getGroupOptions() {
-    $options = array();
-    $result = civicrm_api3('Group', 'get', array(
-      'is_active' => 1,
-      'options' => array('limit' => 0),
-    ));
-    foreach ($result['values'] as $id => $value) {
-      $options[$id] = $value['title'];
-    }
-    asort($options);
-    $options = array(0 => '- '. ts('none') . ' -') + $options;
-    return $options;
-  }
-
-  public static function getActivityTypeOptions() {
-    $options = array();
-    $result = civicrm_api3('OptionValue', 'get', array(
-      'option_group_id' => "activity_type",
-      'is_active' => 1,
-      'options' => array('limit' => 0),
-    ));
-    foreach ($result['values'] as $id => $value) {
-      $options[$value['value']] = $value['label'];
-    }
-    asort($options);
-    return $options;
-  }
-
-  public static function getActivityStatusOptions() {
-    $options = array();
-    $result = civicrm_api3('OptionValue', 'get', array(
-      'option_group_id' => "activity_status",
-      'is_active' => 1,
-      'options' => array('limit' => 0),
-    ));
-    foreach ($result['values'] as $id => $value) {
-      $options[$value['value']] = $value['label'];
-    }
-    asort($options);
-    return $options;
   }
 
   public function getSettingOptions($setting) {
@@ -217,5 +175,5 @@ class CRM_Quickmail_Form_Settings extends CRM_Core_Form {
       return CRM_Utils_Array::value('X_options', $setting, array());
     }
   }
-}
 
+}

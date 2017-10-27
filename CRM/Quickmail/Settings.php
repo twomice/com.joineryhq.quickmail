@@ -25,6 +25,7 @@ class CRM_Quickmail_Settings {
       ),
     ));
     $ret = array(
+      '' => '- ' . ts('None') . ' -',
       '0' => '- ' . ts('Use default') . ' -',
     );
     $ret += array_map(function($value) {
