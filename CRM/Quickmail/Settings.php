@@ -10,6 +10,38 @@ class CRM_Quickmail_Settings {
   const FILTER_DISALLOWED = 2;
   const SETTINGS_FILTER = array('group' => 'quickmail');
 
+  private static function getComponentOptions($type) {
+    $vaildTypes = array('header', 'footer');
+    if (!in_array(strtolower($type), $vaildTypes)) {
+      // Invalid type; just return empty array.
+      return array();
+    }
+
+    $result = civicrm_api3('MailingComponent', 'get', array(
+      'component_type' => $type,
+      'return' => array("name"),
+      'options' => array(
+        'sort' => 'name',
+      ),
+    ));
+    $ret = array(
+      '0' => '- ' . ts('Use default') . ' -',
+    );
+    $ret += array_map(function($value) {
+      return $value['name'];
+    }, $result['values']);
+
+    return $ret;
+  }
+
+  public static function getHeaderOptions() {
+    return self::getComponentOptions('header');
+  }
+
+  public static function getFooterOptions() {
+    return self::getComponentOptions('footer');
+  }
+
   public static function getGroupOptions($filter = NULL) {
 
     $params = array(
