@@ -54,7 +54,8 @@ class CRM_Quickmail_Form_QuickmailCompose extends CRM_Core_Form {
     $this->addButtons(array(
       array(
         'type' => 'submit',
-        'name' => E::ts('Submit'),
+        'name' => E::ts('Send'),
+        'icon' => 'fa-paper-plane',
         'isDefault' => TRUE,
       ),
     ));
@@ -66,6 +67,15 @@ class CRM_Quickmail_Form_QuickmailCompose extends CRM_Core_Form {
 
   public function postProcess() {
     $values = $this->exportValues();
+
+    // Make sure we have recipients. If not, fail.
+    $recipientGroupIds = array_keys($values['recipient_group_ids']);
+    $recipientContacts = $this->getRecipientContacts($recipientGroupIds);
+    $recipientCount = count($recipientContacts);
+    if (!$recipientCount) {
+      CRM_Core_Session::setStatus(E::ts('The selected groups contain no contacts who can receive email. Mailing not scheduled.'), 'QuickMail', 'error');
+      return;
+    }
 
     $settings = CRM_Quickmail_Settings::getSettingValues(array('quickmail_header_id', 'quickmail_footer_id'));
     $headerId = self::getComponentId('header', CRM_Utils_Array::value('quickmail_header_id', $settings, 0));
@@ -92,8 +102,6 @@ class CRM_Quickmail_Form_QuickmailCompose extends CRM_Core_Form {
       $result = civicrm_api3('Mailing', 'create', $params);
       $mailingId = $result['id'];
 
-      $recipientGroupIds = array_keys($values['recipient_group_ids']);
-      $recipientContacts = $this->getRecipientContacts($recipientGroupIds);
       foreach ($recipientContacts as $recipientContact) {
         $bao = new CRM_Mailing_BAO_Recipients();
         $bao->mailing_id = $mailingId;
@@ -102,7 +110,7 @@ class CRM_Quickmail_Form_QuickmailCompose extends CRM_Core_Form {
         $bao->save();
       }
       $args = array(
-        '1' => count($recipientContacts),
+        '1' => $recipientCount,
       );
       CRM_Core_Session::setStatus(E::ts('Mail scheduled for immediate delivery to %1 contacts.', $args), 'QuickMail', 'success');
       CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/quickmail/compose', 'reset=1'));
