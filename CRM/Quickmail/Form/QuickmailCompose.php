@@ -92,8 +92,8 @@ class CRM_Quickmail_Form_QuickmailCompose extends CRM_Core_Form {
       $result = civicrm_api3('Mailing', 'create', $params);
       $mailingId = $result['id'];
 
-      $recipentGroupIds = array_flip($values['recipient_group_ids']);
-      $recipientContacts = $this->getRecipientContacts($recipentGroupIds);
+      $recipientGroupIds = array_keys($values['recipient_group_ids']);
+      $recipientContacts = $this->getRecipientContacts($recipientGroupIds);
       foreach ($recipientContacts as $recipientContact) {
         $bao = new CRM_Mailing_BAO_Recipients();
         $bao->mailing_id = $mailingId;
@@ -101,7 +101,10 @@ class CRM_Quickmail_Form_QuickmailCompose extends CRM_Core_Form {
         $bao->email_id = $recipientContact['email_id'];
         $bao->save();
       }
-      CRM_Core_Session::setStatus('done', 'QuickMail', 'success');
+      $args = array(
+        '1' => count($recipientContacts),
+      );
+      CRM_Core_Session::setStatus(E::ts('Mail scheduled for immediate delivery to %1 contacts.', $args), 'QuickMail', 'success');
       CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/quickmail/compose', 'reset=1'));
     }
     catch (CiviCRM_API3_Exception $e) {
@@ -109,14 +112,14 @@ class CRM_Quickmail_Form_QuickmailCompose extends CRM_Core_Form {
     }
   }
 
-  private function getRecipientContacts($recipentGroupIds = array()) {
-    if (empty($recipentGroupIds)) {
+  private function getRecipientContacts($recipientGroupIds = array()) {
+    if (empty($recipientGroupIds)) {
       // If no recipient groups, then no recipient contacts, so just return
       // an empty array.
       return array();
     }
-    $recipientContacts = civicrm_api3('contact', 'get', array(
-      'group' => $recipentGroupIds,
+    $params = array(
+      'group' => $recipientGroupIds,
       'is_deceased' => 0,
       'is_deleted' => 0,
       'do_not_email' => 0,
@@ -129,7 +132,9 @@ class CRM_Quickmail_Form_QuickmailCompose extends CRM_Core_Form {
         'id',
         'email_id',
       ),
-    ));
+    );
+    $recipientContacts = civicrm_api3('contact', 'get', $params);
+
     return $recipientContacts['values'];
   }
 
