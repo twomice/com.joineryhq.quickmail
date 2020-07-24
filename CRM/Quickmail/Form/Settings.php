@@ -11,7 +11,7 @@ require_once 'CRM/Core/Form.php';
  */
 class CRM_Quickmail_Form_Settings extends CRM_Core_Form {
 
-  static $extensionName = 'com.joineryhq.quickmail';
+  public static $extensionName = 'com.joineryhq.quickmail';
   private $_submittedValues = array();
   private $_settings = array();
 
@@ -39,9 +39,12 @@ class CRM_Quickmail_Form_Settings extends CRM_Core_Form {
         switch ($setting['html_type']) {
           case 'Select':
             $this->add(
-              $setting['html_type'], // field type
-              $setting['name'], // field name
-              $setting['title'], // field label
+              // field type
+              $setting['html_type'],
+              // field name
+              $setting['name'],
+              // field label
+              $setting['title'],
               $this->getSettingOptions($setting),
               NULL,
               CRM_Utils_Array::value('html_attributes', $setting, array())
@@ -51,16 +54,20 @@ class CRM_Quickmail_Form_Settings extends CRM_Core_Form {
           case 'CheckBox':
             $options = array_flip($this->getSettingOptions($setting));
             $this->addCheckBox(
-              $setting['name'], // field name
-              $setting['title'], // field label
+              // field name
+              $setting['name'],
+              // field label
+              $setting['title'],
               $options
             );
             break;
 
           case 'Radio':
             $this->addRadio(
-              $setting['name'], // field name
-              $setting['title'], // field label
+              // field name
+              $setting['name'],
+              // field label
+              $setting['title'],
               $this->getSettingOptions($setting)
             );
             break;

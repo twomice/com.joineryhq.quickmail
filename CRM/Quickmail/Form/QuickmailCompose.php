@@ -8,6 +8,7 @@ use CRM_Quickmail_ExtensionUtil as E;
  * @see https://wiki.civicrm.org/confluence/display/CRMDOC/QuickForm+Reference
  */
 class CRM_Quickmail_Form_QuickmailCompose extends CRM_Core_Form {
+
   public function buildQuickForm() {
     $recipientGroupsOptions = array_flip(CRM_Quickmail_Settings::getGroupOptions(CRM_Quickmail_Settings::FILTER_ALLOWED));
     if (empty($recipientGroupsOptions)) {
@@ -17,24 +18,36 @@ class CRM_Quickmail_Form_QuickmailCompose extends CRM_Core_Form {
     }
     // add form elements
     $this->add(
-      'text', // field type
-      'from_name', // field name
-      E::ts('From Name'), // field label
-      NULL, // attributes
-      TRUE // is required
+      // field type
+      'text',
+      // field name
+      'from_name',
+      // field label
+      E::ts('From Name'),
+      // attributes
+      NULL,
+      // is required
+      TRUE
     );
     $this->add(
-      'text', // field type
-      'from_email', // field name
-      E::ts('From Address'), // field label
-      NULL, // attributes
-      TRUE // is required
+      // field type
+      'text',
+      // field name
+      'from_email',
+      // field label
+      E::ts('From Address'),
+      // attributes
+      NULL,
+      // is required
+      TRUE
     );
     $this->addRule('from_email', E::ts('Email is not valid.'), 'email');
 
     $this->addCheckBox(
-      'recipient_group_ids', // field name
-      E::ts('Recipient Groups'), // field label
+      // field name
+      'recipient_group_ids',
+      // field label
+      E::ts('Recipient Groups'),
       $recipientGroupsOptions,
       NULL,
       NULL,
@@ -42,11 +55,16 @@ class CRM_Quickmail_Form_QuickmailCompose extends CRM_Core_Form {
     );
 
     $this->add(
-      'text', // field type
-      'subject', // field name
-      E::ts('Subject'), // field label
-      NULL, // attributes
-      TRUE // is required
+      // field type
+      'text',
+      // field name
+      'subject',
+      // field label
+      E::ts('Subject'),
+      // attributes
+      NULL,
+      // is required
+      TRUE
     );
 
     $this->add('wysiwyg', 'email_body', ts('Message Body'));

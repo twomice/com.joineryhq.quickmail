@@ -109,7 +109,7 @@ class CRM_Quickmail_Settings {
 
     if (!$isForm) {
       $settingsMetadata = self::getSettingsMetadata();
-      array_walk($ret, function(&$value, $key) use ($settingsMetadata){
+      array_walk($ret, function(&$value, $key) use ($settingsMetadata) {
         if ($settingsMetadata[$key]['html_type'] == 'CheckBox') {
           $value = array_keys($value);
         }
