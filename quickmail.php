@@ -4,13 +4,17 @@ require_once 'quickmail.civix.php';
 use CRM_Quickmail_ExtensionUtil as E;
 
 function quickmail_civicrm_permission(&$permissions) {
-  $prefix = ts('CiviCRM QuickMail') . ': '; // name of extension or module
+  // name of extension or module
+  $prefix = ts('CiviCRM QuickMail') . ': ';
   $permissions['access quickmail'] = array(
-    $prefix . ts('access QuickMail'), // label
-    ts('Use CiviCRM QuickMail to send email'), // description
+    // label
+    $prefix . ts('access QuickMail'),
+    // description
+    ts('Use CiviCRM QuickMail to send email'),
   );
   $permissions['administer quickmail'] = array(
-    $prefix . ts('Administer QuickMail'), // if no description, just give an array with the label
+    // if no description, just give an array with the label
+    $prefix . ts('Administer QuickMail'),
     '',
   );
 }
@@ -141,10 +145,10 @@ function quickmail_civicrm_alterSettingsFolders(&$metaDataFolders = NULL) {
  * Implements hook_civicrm_preProcess().
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_preProcess
- *
-function quickmail_civicrm_preProcess($formName, &$form) {
+ */
+// function quickmail_civicrm_preProcess($formName, &$form) {
 
-} // */
+// } // */
 
 /**
  * Implements hook_civicrm_navigationMenu().
