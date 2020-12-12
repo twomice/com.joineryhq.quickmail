@@ -67,7 +67,7 @@ class CRM_Quickmail_Form_QuickmailCompose extends CRM_Core_Form {
       TRUE
     );
 
-    $this->add('wysiwyg', 'email_body', ts('Message Body'));
+    $this->add('wysiwyg', 'email_body', E::ts('Message Body'));
 
     $this->addButtons(array(
       array(

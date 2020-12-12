@@ -2,7 +2,7 @@
 use CRM_Quickmail_ExtensionUtil as E;
 
 $manageUrl = CRM_Utils_System::url('civicrm/admin/component', 'reset=1');
-$manageLink = "See also: <a href=\"$manageUrl\">" . ts('Headers, Footers, and Automated Messages') . '</a>';
+$manageLink = "See also: <a href=\"$manageUrl\">" . E::ts('Headers, Footers, and Automated Messages') . '</a>';
 
 return array(
   'quickmail_allowed_group_ids' => array(
@@ -14,7 +14,7 @@ return array(
     'is_domain' => 1,
     'is_contact' => 0,
     'description' => E::ts('Selected groups will be offered as QuickMail recipients. Only groups of type "Mailing List" are shown here.'),
-    'title' => ts('Allowed groups'),
+    'title' => E::ts('Allowed groups'),
     'help_text' => '',
     'html_type' => 'CheckBox',
     'quick_form_type' => 'Element',
@@ -29,7 +29,7 @@ return array(
     'is_domain' => 1,
     'is_contact' => 0,
     'description' => E::ts('The selected header will be automatically placed in all QuickMail mailings.') . " $manageLink",
-    'title' => ts('Header'),
+    'title' => E::ts('Header'),
     'help_text' => '',
     'html_type' => 'Select',
     'quick_form_type' => 'Element',
@@ -44,7 +44,7 @@ return array(
     'is_domain' => 1,
     'is_contact' => 0,
     'description' => E::ts('The selected footer will be automatically placed in all QuickMail mailings.') . " $manageLink",
-    'title' => ts('Footer'),
+    'title' => E::ts('Footer'),
     'help_text' => '',
     'html_type' => 'Select',
     'quick_form_type' => 'Element',
