@@ -4,6 +4,9 @@
  * Settings-related utility methods.
  *
  */
+
+use CRM_Quickmail_ExtensionUtil as E;
+
 class CRM_Quickmail_Settings {
 
   const FILTER_ALLOWED = 1;

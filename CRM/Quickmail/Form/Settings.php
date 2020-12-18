@@ -2,6 +2,8 @@
 
 require_once 'CRM/Core/Form.php';
 
+use CRM_Quickmail_ExtensionUtil as E;
+
 /**
  * Form controller class for extension Settings form.
  * Borrowed heavily from
