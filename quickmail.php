@@ -5,16 +5,16 @@ use CRM_Quickmail_ExtensionUtil as E;
 
 function quickmail_civicrm_permission(&$permissions) {
   // name of extension or module
-  $prefix = ts('CiviCRM QuickMail') . ': ';
+  $prefix = E::ts('CiviCRM QuickMail') . ': ';
   $permissions['access quickmail'] = array(
     // label
-    $prefix . ts('access QuickMail'),
+    $prefix . E::ts('access QuickMail'),
     // description
-    ts('Use CiviCRM QuickMail to send email'),
+    E::ts('Use CiviCRM QuickMail to send email'),
   );
   $permissions['administer quickmail'] = array(
     // if no description, just give an array with the label
-    $prefix . ts('Administer QuickMail'),
+    $prefix . E::ts('Administer QuickMail'),
     '',
   );
 }

@@ -4,6 +4,9 @@
  * Settings-related utility methods.
  *
  */
+
+use CRM_Quickmail_ExtensionUtil as E;
+
 class CRM_Quickmail_Settings {
 
   const FILTER_ALLOWED = 1;
@@ -25,8 +28,8 @@ class CRM_Quickmail_Settings {
       ),
     ));
     $ret = array(
-      '' => '- ' . ts('None') . ' -',
-      '0' => '- ' . ts('Use default') . ' -',
+      '' => '- ' . E::ts('None') . ' -',
+      '0' => '- ' . E::ts('Use default') . ' -',
     );
     $ret += array_map(function($value) {
       return $value['name'];
